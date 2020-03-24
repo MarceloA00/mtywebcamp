@@ -167,6 +167,7 @@ ul {
 }
 
 .boton:hover {
+  cursor: pointer;
   background-color: #e33000;
 }
 
@@ -214,6 +215,46 @@ img {
 .seccion p {
   font-size: 18px;
   text-align: center;
+}
+
+/*Lettering*/
+
+.nombre-sitio span {
+  position: relative;
+  text-shadow: 0 0 30px black;
+}
+
+@media (min-width: 992px) {
+  .char1 {
+    top: 20px; right: 20px;
+  }
+  .char2 {
+    top: 0px; left: -20px;
+  }
+  .char3 {
+    top: 10px; right: 20px;
+  }
+  .char4 {
+    top: 5px; right: 10px;
+  }
+  .char5 {
+    top: 15px; right: 10px;
+  }
+  .char6 {
+    top: 5px; left: 5px;
+  }
+  .char7 {
+    top: 20px; left: -5px;
+  }
+  .char8 {
+    top: 0px; left: 5px;
+  }
+  .char9 {
+    top: 10px; right: 20px;
+  }
+  .char10 {
+    top: 20px; right: 20px;
+  }
 }
 
 /*Header*/
@@ -456,8 +497,6 @@ img {
 
 .menu-prog {
   width: 100%;
-  border-bottom: 1px solid #fe4918;
-  padding-bottom: 10px;
 }
 
 @media (min-width: 768px) {
@@ -474,6 +513,24 @@ img {
   font-family: "Oswald", sans-serif;
   margin-bottom: 10px;
   font-size: 1.2em;
+  position: relative;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #fe4918;
+}
+
+.menu-prog a.activo::after {
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  height: 20px;
+  width: 30px;
+  bottom: -20px;
+  background-image: url(../img/talleres-flecha.jpg);
+  background-position: top center;
+  background-repeat: no-repeat;
 }
 
 @media (min-width: 768px) {
@@ -487,6 +544,10 @@ img {
   color: #fe4918;
   padding-right: 5px;
   font-size: 18px;
+}
+
+.ocultar {
+  display: none;
 }
 
 .detalle-event {
@@ -678,7 +739,6 @@ img {
 
 .mapa {
   height: 380px;
-  background-color: #fe4918;
 }
 
 /*Testimoniales*/
@@ -890,7 +950,7 @@ h4 {
   }
 }
 
-.tabla-precio:hover {
+.no-effect:hover {
   transform: none;
   box-shadow: none;
 }
@@ -904,7 +964,6 @@ h4 {
 
 .contenido-dia {
   padding: 20px;
-  /*display: none;*/
 }
 
 @media (min-width: 768px) {
@@ -960,9 +1019,32 @@ div.resumen .total {
   padding: 30px;
 }
 
-div.resumen input  {
+div.resumen input {
   display: block;
   margin: 10px auto;
+}
+
+#lista-productos {
+  background-color: #e1e1e1;
+  padding: 20px;
+  display: none;
+}
+
+#suma-total {
+  text-align: center;
+  font-size: 2em;
+  color: #fe4918;
+}
+
+#eventos {
+  display: none;
+}
+
+#error {
+  clear: both;
+  padding: 20px;
+  text-align: center;
+  display: none;
 }
 
 /* ==========================================================================
