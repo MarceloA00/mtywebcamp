@@ -42,163 +42,210 @@ document.addEventListener('DOMContentLoaded', function () {
     var etiquetas = document.getElementById('etiquetas');
     var camisas = document.getElementById('camisa_evento');
 
+    botonRegistro.disabled = true;
 
-    calcular.addEventListener('click', calcularMontos);
-
-    pase_dia.addEventListener('change', abrirDias);
-    pase_dosdias.addEventListener('change', abrirDias);
-    pase_completo.addEventListener('change', abrirDias);
-
-    function abrirDias() {
-        evento.style.display = 'block';
-        var boletosDia = pase_dia.value;
-        var boletos2Dias = pase_dosdias.value;
-        var boletoComlpeto = pase_completo.value;
+    if (document.getElementById('calcular')) {
 
 
-        if (boletosDia >= 1) {
-            viernes.style.display = 'block';
-        } else {
-            viernes.style.display = 'none';
+
+        calcular.addEventListener('click', calcularMontos);
+
+        pase_dia.addEventListener('change', abrirDias);
+        pase_dosdias.addEventListener('change', abrirDias);
+        pase_completo.addEventListener('change', abrirDias);
+
+        function abrirDias() {
+            evento.style.display = 'block';
+            var boletosDia = pase_dia.value;
+            var boletos2Dias = pase_dosdias.value;
+            var boletoComlpeto = pase_completo.value;
+
+
+            if (boletosDia >= 1) {
+                viernes.style.display = 'block';
+            } else {
+                viernes.style.display = 'none';
+            }
+
+            if (boletos2Dias > 0) {
+                viernes.style.display = 'block';
+                sabado.style.display = 'block';
+            } else {
+                sabado.style.display = 'none';
+            }
+
+            if (boletoComlpeto > 0) {
+                viernes.style.display = 'block';
+                sabado.style.display = 'block';
+                domingo.style.display = 'block';
+            } else {
+                domingo.style.display = 'none';
+            }
+
+            if (boletosDia == 0 && boletos2Dias == 0 && boletoComlpeto == 0) {
+                evento.style.display = 'none';
+
+            }
+
+
         }
 
-        if (boletos2Dias > 0) {
-            viernes.style.display = 'block';
-            sabado.style.display = 'block';
-        } else {
-            sabado.style.display = 'none';
+
+        function calcularMontos(event) {
+            event.preventDefault();
+            if (regalo.value === '') {
+                alert('Debes Elegir un Regalo.');
+                regalo.focus();
+            } else {
+                //Variables
+                var boletosDia = parseInt(pase_dia.value, 10) || 0;
+                var boletos2Dias = parseInt(pase_dosdias.value, 10) || 0;
+                var boletoComlpeto = parseInt(pase_completo.value, 10) || 0;
+                var cantEti = parseInt(etiquetas.value, 10) || 0;
+                var cantCami = parseInt(camisas.value, 10) || 0;
+
+                //Total a Pagar
+                var totalPagar = (boletosDia * 30) + (boletos2Dias * 45) + (boletoComlpeto * 50) + ((cantCami * 10) * .93) + (cantEti * 2);
+
+                //Arreglo de Resumen
+                var listadoProductos = [];
+
+                if (boletosDia === 1) {
+                    listadoProductos.push(boletosDia + ' Pase por 1 dia');
+                } else if (boletosDia >= 2) {
+                    listadoProductos.push(boletosDia + ' Pases por 1 dia');
+                }
+
+                if (boletos2Dias === 1) {
+                    listadoProductos.push(boletos2Dias + ' Pase por 2 dias');
+                } else if (boletos2Dias >= 2) {
+                    listadoProductos.push(boletos2Dias + ' Pases por 2 dias');
+                }
+
+                if (boletoComlpeto === 1) {
+                    listadoProductos.push(boletoComlpeto + ' Pase completo');
+                } else if (boletoComlpeto >= 2) {
+                    listadoProductos.push(boletoComlpeto + ' Pases completos');
+                }
+
+                if (cantEti === 1) {
+                    listadoProductos.push(cantEti + ' Paquete de Etiquetas');
+                } else if (cantEti >= 2) {
+                    listadoProductos.push(cantEti + ' Paquetes de Etiquetas');
+                }
+
+                if (cantCami === 1) {
+                    listadoProductos.push(cantCami + ' Camisa');
+                } else if (cantCami >= 2) {
+                    listadoProductos.push(cantCami + ' Camisas');
+                }
+
+                resultado.style.display = 'block';
+                resultado.innerHTML = '';
+
+                for (var i = 0; i < listadoProductos.length; i++) {
+                    resultado.innerHTML += listadoProductos[i] + '<br/>';
+
+                }
+
+                pagoFinal.innerHTML = '$ ' + totalPagar.toFixed(2);
+
+                botonRegistro.disabled = false;
+                document.getElementById('total_pedido').value = totalPagar;
+
+            }
+
         }
 
-        if (boletoComlpeto > 0) {
-            viernes.style.display = 'block';
-            sabado.style.display = 'block';
-            domingo.style.display = 'block';
-        } else {
-            domingo.style.display = 'none';
+        //Esquema de Validacion
+
+        nombre.addEventListener('blur', validarCampos);
+        apellido.addEventListener('blur', validarCampos);
+        email.addEventListener('blur', validarCampos);
+        email.addEventListener('blur', validarMail);
+
+        function validarCampos() {
+            if (this.value == '') {
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = 'Este Campo es Obligatorio';
+                this.style.border = '1px solid red';
+                errorDiv.style.border = '1px solid red';
+            } else {
+                errorDiv.style.display = 'none';
+                this.style.border = '1px solid grey'
+            }
         }
 
-        if (boletosDia == 0 && boletos2Dias == 0 && boletoComlpeto == 0) {
-            evento.style.display = 'none';
-
+        function validarMail() {
+            if (this.value.indexOf('@') > -1) {
+                errorDiv.style.display = 'none';
+                this.style.border = '1p solid grey';
+            } else {
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = 'Debe Tener Al Menos una @';
+                this.style.border = '1px solid red';
+                errorDiv.style.border = '1px solid red';
+            }
         }
-
-
     }
-
-
-    function calcularMontos(event) {
-        event.preventDefault();
-        if (regalo.value === '') {
-            alert('Debes Elegir un Regalo.');
-            regalo.focus();
-        } else {
-            //Variables
-            var boletosDia = parseInt(pase_dia.value, 10) || 0;
-            var boletos2Dias = parseInt(pase_dosdias.value, 10) || 0;
-            var boletoComlpeto = parseInt(pase_completo.value, 10) || 0;
-            var cantEti = parseInt(etiquetas.value, 10) || 0;
-            var cantCami = parseInt(camisas.value, 10) || 0;
-
-            //Total a Pagar
-            var totalPagar = (boletosDia * 30) + (boletos2Dias * 45) + (boletoComlpeto * 50) + ((cantCami * 10) * .93) + (cantEti * 2);
-
-            //Arreglo de Resumen
-            var listadoProductos = [];
-
-            if (boletosDia === 1) {
-                listadoProductos.push(boletosDia + ' Pase por 1 dia');
-            } else if (boletosDia >= 2) {
-                listadoProductos.push(boletosDia + ' Pases por 1 dia');
-            }
-
-            if (boletos2Dias === 1) {
-                listadoProductos.push(boletos2Dias + ' Pase por 2 dias');
-            } else if (boletos2Dias >= 2) {
-                listadoProductos.push(boletos2Dias + ' Pases por 2 dias');
-            }
-
-            if (boletoComlpeto === 1) {
-                listadoProductos.push(boletoComlpeto + ' Pase completo');
-            } else if (boletoComlpeto >= 2) {
-                listadoProductos.push(boletoComlpeto + ' Pases completos');
-            }
-
-            if (cantEti === 1) {
-                listadoProductos.push(cantEti + ' Paquete de Etiquetas');
-            } else if (cantEti >= 2) {
-                listadoProductos.push(cantEti + ' Paquetes de Etiquetas');
-            }
-
-            if (cantCami === 1) {
-                listadoProductos.push(cantCami + ' Camisa');
-            } else if (cantCami >= 2) {
-                listadoProductos.push(cantCami + ' Camisas');
-            }
-
-            resultado.style.display = 'block';
-            resultado.innerHTML = '';
-
-            for (var i = 0; i < listadoProductos.length; i++) {
-                resultado.innerHTML += listadoProductos[i] + '<br/>';
-
-            }
-
-            pagoFinal.innerHTML = '$ ' + totalPagar.toFixed(2);
-
-        }
-
-    }
-
-    //Esquema de Validacion
-
-    nombre.addEventListener('blur', validarCampos);
-    apellido.addEventListener('blur', validarCampos);
-    email.addEventListener('blur', validarCampos);
-    email.addEventListener('blur', validarMail);
-
-    function validarCampos() {
-        if (this.value == '') {
-            errorDiv.style.display = 'block';
-            errorDiv.innerHTML = 'Este Campo es Obligatorio';
-            this.style.border = '1px solid red';
-            errorDiv.style.border = '1px solid red';
-        } else {
-            errorDiv.style.display = 'none';
-            this.style.border = '1px solid grey'
-        }
-    }
-
-    function validarMail() {
-        if (this.value.indexOf('@') > -1) {
-            errorDiv.style.display = 'none';
-            this.style.border = '1p solid grey';
-        } else {
-            errorDiv.style.display = 'block';
-            errorDiv.innerHTML = 'Debe Tener Al Menos una @';
-            this.style.border = '1px solid red';
-            errorDiv.style.border = '1px solid red';
-        }
-    }
-
 
 });
 
-$(function() {
+$(function () {
+
+    //Agregar clase a menu
+    $('body.conferencia .nave-prin a:contains("Conferencia")').addClass('activo');
+    $('body.invitados .nave-prin a:contains("Invitados")').addClass('activo');
+    $('body.calendario .nave-prin a:contains("Calendario")').addClass('activo');
+
+
     //Lettering para Nombre del Sitio
     $('.nombre-sitio').lettering();
+
+    //Scroll
+    var windowHeight = $(window).height();
+    var barraAltura = $('.barra').innerHeight();
+
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+
+        if (scroll > windowHeight) {
+            $('.barra').addClass('fixed');
+            $('body').css({ 'margin-top': barraAltura + 'px' });
+        } else {
+            $('.barra').removeClass('fixed');
+            $('body').css({ 'margin-top': '0px' })
+        }
+
+    });
+
+    //Menu Movil
+    $('.menu-movil').on('click', function () {
+        $('.nave-prin').slideToggle();
+    });
+
+    $(window).on('resize', function () {
+        var win = $(window);
+        if (win.width() > 768) {
+            $('.nave-prin').css({ 'display': 'block' });
+        } else if (win.width() < 768) {
+            $('.nave-prin').css({ 'display': 'none' });
+        }
+    })
+
 
 
     //Programa de Conferencias
     $('.prog-event .info-curso:first').show();
     $('.menu-prog a:first').addClass('activo');
-    
-    $('.menu-prog a').on('click', function(){
+
+    $('.menu-prog a').on('click', function () {
 
         $('.menu-prog a').removeClass('activo');
         $(this).addClass('activo');
 
         $('.ocultar').hide();
-        
+
         var enlace = $(this).attr('href');
         $(enlace).fadeIn(1000);
 
@@ -207,18 +254,22 @@ $(function() {
     });
 
     //Animacion de Numeros
-    $('.resumen-event li:nth-child(1) p').animateNumber({number:6}, 1200);
-    $('.resumen-event li:nth-child(2) p').animateNumber({number:15}, 1600);
-    $('.resumen-event li:nth-child(3) p').animateNumber({number:3}, 1400);
-    $('.resumen-event li:nth-child(4) p').animateNumber({number:9}, 1500);
+    $('.resumen-event li:nth-child(1) p').animateNumber({ number: 6 }, 1200);
+    $('.resumen-event li:nth-child(2) p').animateNumber({ number: 15 }, 1600);
+    $('.resumen-event li:nth-child(3) p').animateNumber({ number: 3 }, 1400);
+    $('.resumen-event li:nth-child(4) p').animateNumber({ number: 9 }, 1500);
 
     //CountDown
-    $('.cuenta-reg').countdown('2021/03/19 10:00:00', function(event){
+    $('.cuenta-reg').countdown('2021/03/19 10:00:00', function (event) {
         $('#dias').html(event.strftime('%D'));
         $('#horas').html(event.strftime('%H'));
         $('#minutos').html(event.strftime('%M'));
         $('#segundos').html(event.strftime('%S'));
 
     });
+
+    //Colorbox
+    $('.invitado-info').colorbox({ inline: true, width: '50%' });
+    $('.btn_news').colorbox({inline: true, width: '50%'})
 
 });
